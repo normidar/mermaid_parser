@@ -22,9 +22,11 @@ class Gantt extends GrammarDefinition {
   Parser axisFormatConfig() => (string('axisFormat') & ref0(sp) & ref0(toEol))
       .map((v) => {'type': 'axisFormat', 'value': v[2]});
 
-  Parser commentLine() =>
-      (ref0(sp).optional() & string('%%') & pattern('^\n').star() & ref0(nl).optional())
-          .map((_) => null);
+  Parser commentLine() => (ref0(sp).optional() &
+          string('%%') &
+          pattern('^\n').star() &
+          ref0(nl).optional())
+      .map((_) => null);
 
   Parser config() =>
       ref0(titleConfig) |
@@ -42,7 +44,8 @@ class Gantt extends GrammarDefinition {
       ref0(accDescrConfig);
 
   Parser configLine() =>
-      (ref0(sp).optional() & ref0(config) & ref0(nl).optional()).map((v) => v[1]);
+      (ref0(sp).optional() & ref0(config) & ref0(nl).optional())
+          .map((v) => v[1]);
 
   Parser dateFormatConfig() => (string('dateFormat') & ref0(sp) & ref0(toEol))
       .map((v) => {'type': 'dateFormat', 'value': v[2]});
