@@ -179,10 +179,12 @@ classDiagram
       expect(result.classes[0].members[1], equals('+makeSound()'));
     });
 
-    test('Parse namespace', () {
-      // TODO: Namespace parsing needs more work for multiline nested structures
-      // Skipping for now as 27/28 tests pass
-      const input = '''
+    test(
+      'Parse namespace',
+      () {
+        // TODO: Namespace parsing needs more work for multiline nested structures
+        // Skipping for now as 27/28 tests pass
+        const input = '''
 classDiagram
     namespace Animals {
         class Dog
@@ -190,13 +192,15 @@ classDiagram
     }
 ''';
 
-      // final result = parser.parse(input);
-      // expect(result.namespaces.length, equals(1));
-      // expect(result.namespaces[0].name, equals('Animals'));
-      // expect(result.namespaces[0].classes.length, equals(2));
-      // expect(result.namespaces[0].classes, contains('Dog'));
-      // expect(result.namespaces[0].classes, contains('Cat'));
-    }, skip: true);
+        // final result = parser.parse(input);
+        // expect(result.namespaces.length, equals(1));
+        // expect(result.namespaces[0].name, equals('Animals'));
+        // expect(result.namespaces[0].classes.length, equals(2));
+        // expect(result.namespaces[0].classes, contains('Dog'));
+        // expect(result.namespaces[0].classes, contains('Cat'));
+      },
+      skip: true,
+    );
 
     test('Parse note', () {
       const input = '''
@@ -411,4 +415,3 @@ classDiagram
     });
   });
 }
-
