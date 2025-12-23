@@ -23,7 +23,7 @@ class Gantt extends GrammarDefinition {
       .map((v) => {'type': 'axisFormat', 'value': v[2]});
 
   Parser commentLine() =>
-      (ref0(sp).optional() & string('%%') & ref0(toEol) & ref0(nl))
+      (ref0(sp).optional() & string('%%') & pattern('^\n').star() & ref0(nl))
           .map((_) => null);
 
   Parser config() =>
