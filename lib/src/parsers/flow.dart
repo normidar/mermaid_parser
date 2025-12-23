@@ -130,10 +130,8 @@ class FlowLink {
 /// Represents a subgraph
 class FlowSubgraph {
   FlowSubgraph({
-    this.id,
+    required this.nodes, required this.links, this.id,
     this.title,
-    required this.nodes,
-    required this.links,
     this.subgraphs = const [],
   });
 
@@ -282,56 +280,56 @@ class Flow extends GrammarDefinition {
       (char('[') & ref0(textContent) & char(']')).map((values) => {
             'shape': FlowNodeShape.RECT,
             'text': values[1],
-          });
+          },);
 
   Parser roundShape() =>
       (char('(') & ref0(textContent) & char(')')).map((values) => {
             'shape': FlowNodeShape.ROUND,
             'text': values[1],
-          });
+          },);
 
   Parser diamondShape() =>
       (char('{') & ref0(textContent) & char('}')).map((values) => {
             'shape': FlowNodeShape.RHOMBUS,
             'text': values[1],
-          });
+          },);
 
   Parser hexagonShape() =>
       (string('{{') & ref0(textContent) & string('}}')).map((values) => {
             'shape': FlowNodeShape.HEXAGON,
             'text': values[1],
-          });
+          },);
 
   Parser stadiumShape() =>
       (string('([') & ref0(textContent) & string('])')).map((values) => {
             'shape': FlowNodeShape.STADIUM,
             'text': values[1],
-          });
+          },);
 
   Parser subroutineShape() =>
       (string('[[') & ref0(textContent) & string(']]')).map((values) => {
             'shape': FlowNodeShape.SUBROUTINE,
             'text': values[1],
-          });
+          },);
 
   Parser cylinderShape() =>
       (string('[(') & ref0(textContent) & string(')]')).map((values) => {
             'shape': FlowNodeShape.CYLINDRICAL,
             'text': values[1],
-          });
+          },);
 
   Parser circleShape() =>
       (string('((') & ref0(textContent) & string('))')).map((values) => {
             'shape': FlowNodeShape.CIRCLE,
             'text': values[1],
-          });
+          },);
 
   Parser doubleCircleShape() =>
       (string('(((') & ref0(textContent) & string(')))'))
           .map((values) => {
                 'shape': FlowNodeShape.DOUBLE_CIRCLE,
                 'text': values[1],
-              });
+              },);
 
   Parser textContent() => pattern('^][)(}{').plus().flatten().trim();
 
