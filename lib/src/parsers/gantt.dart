@@ -23,7 +23,7 @@ class Gantt extends GrammarDefinition {
       .map((v) => {'type': 'axisFormat', 'value': v[2]});
 
   Parser commentLine() =>
-      (ref0(sp).optional() & string('%%') & pattern('^\n').star() & ref0(nl))
+      (ref0(sp).optional() & string('%%') & pattern('^\n').star() & ref0(nl).optional())
           .map((_) => null);
 
   Parser config() =>
@@ -42,7 +42,7 @@ class Gantt extends GrammarDefinition {
       ref0(accDescrConfig);
 
   Parser configLine() =>
-      (ref0(sp).optional() & ref0(config) & ref0(nl)).map((v) => v[1]);
+      (ref0(sp).optional() & ref0(config) & ref0(nl).optional()).map((v) => v[1]);
 
   Parser dateFormatConfig() => (string('dateFormat') & ref0(sp) & ref0(toEol))
       .map((v) => {'type': 'dateFormat', 'value': v[2]});
@@ -82,7 +82,7 @@ class Gantt extends GrammarDefinition {
           string('section') &
           ref0(sp) &
           ref0(toEol) &
-          ref0(nl))
+          ref0(nl).optional())
       .map((v) => {'type': 'section', 'value': v[3]});
 
   Parser sp() => pattern(' \t').plus();
@@ -90,16 +90,16 @@ class Gantt extends GrammarDefinition {
   @override
   Parser start() => ref0(ganttDocument).end();
 
-  Parser taskData() => pattern('^\n;#').plus().flatten().trim();
+  Parser taskData() => pattern('^\n;#').plus().flatten().map((s) => s.trim());
 
   Parser taskLine() => (ref0(sp).optional() &
           ref0(taskName) &
           char(':') &
           ref0(taskData) &
-          ref0(nl))
+          ref0(nl).optional())
       .map((v) => {'type': 'task', 'name': v[1], 'data': v[3]});
 
-  Parser taskName() => pattern('^:\n').plus().flatten().trim();
+  Parser taskName() => pattern('^:\n').plus().flatten().map((s) => s.trim());
 
   Parser tickIntervalConfig() =>
       (string('tickInterval') & ref0(sp) & ref0(toEol))
@@ -111,7 +111,7 @@ class Gantt extends GrammarDefinition {
   Parser todayMarkerConfig() => (string('todayMarker') & ref0(sp) & ref0(toEol))
       .map((v) => {'type': 'todayMarker', 'value': v[2]});
 
-  Parser toEol() => pattern('^\n#;').plus().flatten().trim();
+  Parser toEol() => pattern('^\n#;').plus().flatten().map((s) => s.trim());
 
   Parser topAxisConfig() =>
       string('topAxis').map((_) => {'type': 'topAxis', 'value': true});

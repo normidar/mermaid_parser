@@ -210,9 +210,9 @@ class Flow extends GrammarDefinition {
   Parser start() => ref0(flowDocument).end();
 
   Parser flowDocument() =>
-      (ref0(graphConfig) & ref0(statements)).map((values) {
-        final direction = values[0] as FlowDirection;
-        final statements = values[1] as List<dynamic>;
+      (ref0(newline).optional() & ref0(graphConfig) & ref0(statements) & ref0(whitespace)).map((values) {
+        final direction = values[1] as FlowDirection;
+        final statements = values[2] as List<dynamic>;
         return _buildFlowchartResult(direction, statements);
       });
 
@@ -225,8 +225,7 @@ class Flow extends GrammarDefinition {
 
   Parser graphKeyword() =>
       (string('flowchart') | string('graph') | string('flowchart-elk'))
-          .flatten()
-          .trim();
+          .flatten();
 
   Parser directionSpec() =>
       (ref0(spaces) & ref0(direction)).map((values) => values[1]) |
@@ -250,7 +249,7 @@ class Flow extends GrammarDefinition {
       (ref0(spaces) &
               ref0(nodeId) &
               ref0(nodeShape).optional() &
-              (ref0(newline) | epsilon()))
+              ref0(newline).optional())
           .map((values) {
         final id = values[1] as String;
         final shape = values[2] as Map<String, dynamic>?;
@@ -263,7 +262,7 @@ class Flow extends GrammarDefinition {
       });
 
   Parser nodeId() =>
-      (letter() | digit() | pattern('_-')).plus().flatten().trim();
+      (letter() | digit() | pattern('_-')).plus().flatten();
 
   Parser nodeShape() =>
       ref0(rectShape) |
@@ -331,18 +330,20 @@ class Flow extends GrammarDefinition {
                 'text': values[1],
               },);
 
-  Parser textContent() => pattern('^][)(}{').plus().flatten().trim();
+  Parser textContent() => pattern('^][)(}{').plus().flatten().map((s) => s.trim());
 
   Parser commentLine() =>
       (ref0(spaces).optional() &
               string('%%') &
               Token.newlineParser().neg().star() &
-              (ref0(newline) | epsilon()))
+              ref0(newline).optional())
           .map((_) => null);
 
   Parser emptyLine() => (ref0(spaces).optional() & ref0(newline)).map((_) => null);
 
   Parser spaces() => pattern(' \t').plus().flatten();
+
+  Parser whitespace() => pattern(' \t\n').star();
 
   Parser newline() => char('\n');
 
