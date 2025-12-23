@@ -8,8 +8,8 @@ dev_dependencies:
   very_good_analysis: any
 environment:
   sdk: ^3.0.0
-name: dart_pkg_temp
-homepage: https://github.com/normidar/dart_pkg_temp
+name: mermaid_parser
+homepage: https://github.com/normidar/mermaid_parser
 topics:
   - a
   - b
