@@ -107,6 +107,35 @@ Root
 ''');
 ```
 
+### Convert Back to Mermaid String
+
+```dart
+final parser = Mindmap();
+final result = parser.parse('''
+mindmap
+Root
+  A(Rounded)
+    B
+    C
+  D[Rectangle]
+''');
+
+// Convert back to Mermaid format
+final mermaidString = result.toMermaidString();
+print(mermaidString);
+// Output:
+// mindmap
+// Root
+//   A(Rounded)
+//     B
+//     C
+//   D[Rectangle]
+
+// Round-trip parsing
+final result2 = parser.parse(mermaidString);
+assert(result2.root.id == result.root.id);
+```
+
 ## API Reference
 
 ### Classes
@@ -123,6 +152,7 @@ Contains the parsing result.
 
 - `MindmapNode root` - The root node of the mindmap
 - `List<MindmapNode> allNodes` - All nodes in the mindmap (flat list)
+- `String toMermaidString()` - Convert the result back to Mermaid format string
 
 #### `MindmapNode`
 

@@ -148,7 +148,8 @@ class Mindmap extends GrammarDefinition {
       return result.value as MindmapResult;
     } else {
       throw FormatException(
-          'Parse error at ${result.position}: ${result.message}');
+        'Parse error at ${result.position}: ${result.message}',
+      );
     }
   }
 
@@ -301,9 +302,71 @@ class MindmapResult {
 
   final List<MindmapNode> allNodes;
 
+  /// Convert the mindmap back to Mermaid string format
+  String toMermaidString() {
+    final buffer = StringBuffer();
+    buffer.writeln('mindmap');
+    _writeNode(buffer, root);
+    return buffer.toString();
+  }
+
   @override
   String toString() {
     return 'MindmapResult:\n$root';
+  }
+
+  (String, String) _getDelimiters(NodeType type) {
+    switch (type) {
+      case NodeType.ROUNDED:
+        return ('(', ')');
+      case NodeType.RECT:
+        return ('[', ']');
+      case NodeType.HEXAGON:
+        return ('{{', '}}');
+      case NodeType.CLOUD:
+        return ('(-', '-)');
+      case NodeType.BANG:
+        return ('-)', '-)');
+      case NodeType.CIRCLE:
+        return ('((', '))');
+      case NodeType.DEFAULT:
+        return ('', '');
+    }
+  }
+
+  void _writeNode(StringBuffer buffer, MindmapNode node) {
+    final indent = '  ' * node.level;
+
+    // Write node with appropriate delimiter
+    if (node.id == node.description && node.type == NodeType.DEFAULT) {
+      // Simple node without delimiter
+      buffer.writeln('$indent${node.id}');
+    } else {
+      // Node with delimiter
+      final (start, end) = _getDelimiters(node.type);
+      if (node.id != node.description) {
+        // Node has custom ID
+        buffer.writeln('$indent${node.id}$start${node.description}$end');
+      } else {
+        // Node without custom ID
+        buffer.writeln('$indent$start${node.description}$end');
+      }
+    }
+
+    // Write icon if present
+    if (node.icon != null) {
+      buffer.writeln('$indent::icon(${node.icon})');
+    }
+
+    // Write class if present
+    if (node.className != null) {
+      buffer.writeln('$indent:::${node.className}');
+    }
+
+    // Write children
+    for (final child in node.children) {
+      _writeNode(buffer, child);
+    }
   }
 }
 

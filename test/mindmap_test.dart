@@ -172,5 +172,71 @@ Root
         throwsA(isA<FormatException>()),
       );
     });
+
+    test('converts result back to mermaid string - simple', () {
+      final parser = Mindmap();
+      final result = parser.parse('''
+mindmap
+Root
+  A
+  B
+''');
+
+      final mermaidString = result.toMermaidString();
+      expect(mermaidString, contains('mindmap'));
+      expect(mermaidString, contains('Root'));
+      expect(mermaidString, contains('  A'));
+      expect(mermaidString, contains('  B'));
+    });
+
+    test('converts result back to mermaid string - with delimiters', () {
+      final parser = Mindmap();
+      final result = parser.parse('''
+mindmap
+Root
+  A(Rounded)
+  B[Rectangle]
+''');
+
+      final mermaidString = result.toMermaidString();
+      expect(mermaidString, contains('A(Rounded)'));
+      expect(mermaidString, contains('B[Rectangle]'));
+    });
+
+    test('converts result back to mermaid string - with icons and classes', () {
+      final parser = Mindmap();
+      final result = parser.parse('''
+mindmap
+Root
+  A
+  ::icon(fa fa-book)
+  :::important
+''');
+
+      final mermaidString = result.toMermaidString();
+      expect(mermaidString, contains('::icon(fa fa-book)'));
+      expect(mermaidString, contains(':::important'));
+    });
+
+    test('round-trip parsing', () {
+      final parser = Mindmap();
+      const input = '''
+mindmap
+Root
+  A
+    B
+    C
+  D
+''';
+
+      final result1 = parser.parse(input);
+      final mermaidString = result1.toMermaidString();
+      final result2 = parser.parse(mermaidString);
+
+      // Verify structure is preserved
+      expect(result2.root.id, result1.root.id);
+      expect(result2.root.children.length, result1.root.children.length);
+      expect(result2.allNodes.length, result1.allNodes.length);
+    });
   });
 }
