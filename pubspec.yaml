@@ -1,5 +1,6 @@
 ---
-dependencies: null
+dependencies:
+  petitparser: ^7.0.1
 description: "'A pkg in Coin Galaxy.'"
 dev_dependencies:
   auto_exporter: ^4.0.0

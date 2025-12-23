@@ -1,1 +1,1 @@
-export 'package:mermaid_parser/src/abc.dart';
+export 'package:mermaid_parser/src/parsers/mindmap.dart';
